@@ -1,14 +1,8 @@
 import argparse
-import re
 import os
 import sys
-import boto3
-import json
 import logging
-import datetime
-from glob import glob
 import torch
-import torch.distributed as dist
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import TensorDataset, DataLoader
@@ -144,9 +138,9 @@ if __name__ == '__main__':
     parser.add_argument('--num-gpus', type=int, default=0,
                         helper='number of gpu to train')
     parser.add_argument('--data-dir', type=str, default='./data/',
-                        helper='the place where store the training data')
+                        helper='the place where to store the training data.')
     parser.add_argument('--model-dir', type=str, default="./model/",
-                        help='the place where store model parameter.')
+                        help='the place where to store the model parameter.')
 
     parser.add_argument('--num-classes', type=int, metavar='N',
                         help='the number of model\'s output, must same as pattern size!')

@@ -4,3 +4,13 @@
 !.vscode/launch.json
 !.vscode/extensions.json
 *.code-workspace
+
+openstack_result/
+model/
+train
+test_normal
+test_abnormal
+.DS_Store
+
+.ipynb_checkpoints/
+*.pyc

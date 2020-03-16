@@ -101,6 +101,8 @@ def _generate(name, window_size=10):
 
 def save_model(model, model_dir, args):
     logger.info("Saving the model.")
+    if not os.path.exists(model_dir):
+        os.mkdir(model_dir)
     path = os.path.join(model_dir, 'model.pth')
     torch.save(model.cpu().state_dict(), path)
     # Save arguments used to create model for restoring the model later
@@ -136,9 +138,9 @@ if __name__ == '__main__':
     parser.add_argument('--seed', type=int, default=1, metavar='S',
                         help='random seed (default: 1)')
     parser.add_argument('--num-gpus', type=int, default=0,
-                        helper='number of gpu to train')
+                        help='number of gpu to train')
     parser.add_argument('--data-dir', type=str, default='./data/',
-                        helper='the place where to store the training data.')
+                        help='the place where to store the training data.')
     parser.add_argument('--model-dir', type=str, default="./model/",
                         help='the place where to store the model parameter.')
 

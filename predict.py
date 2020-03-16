@@ -1,9 +1,11 @@
 import os
+import sys
+import json
 import torch
 import logging
 from train import Model
 
-logging.basicConfig(level=logging.DEBUG,
+logging.basicConfig(level=logging.WARN,
                     format='[%(asctime)s][%(levelname)s]: %(message)s')
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler(sys.stdout))
@@ -33,7 +35,7 @@ def model_fn(model_dir):
 
 
 def input_fn(request_body, request_content_type):
-    logger.info('Deserializing the input data.')
+    logger.debug('Deserializing the input data.')
     if request_content_type == 'application/json':
         input_data = json.loads(request_body)
         return input_data
@@ -49,13 +51,13 @@ def predict_fn(input_data, model_info):
     window_size = model_info['window_size']
     model = model_info['model']
 
-    logger.info(line)
-    logger.debug(num_candidates)
-    logger.debug(input_size)
-    logger.debug(window_size)
+    logger.debug(f'line: {line}')
+    logger.debug(f'num_candidates: {num_candidates}')
+    logger.debug(f'input_size: {input_size}')
+    logger.debug(f'window_size: {window_size}')
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    logger.info('Current device: {}'.format(device))
+    logger.debug('Current device: {}'.format(device))
 
     predict_cnt = 0
     anomaly_cnt = 0
@@ -70,13 +72,20 @@ def predict_fn(input_data, model_info):
         if label not in predict:
             anomaly_cnt += 1
             predict_list[i + window_size] = 1
-        predict_cnt +=1
+        predict_cnt += 1
     return {'anomaly_cnt': anomaly_cnt, 'predict_cnt': predict_cnt, 'predict_list': predict_list}
 
 
 if __name__ == '__main__':
+    model_dir = './model'
     model_info = model_fn(model_dir)
-    for event_id in deeplog_df['EventId']:
-        request = json.dumps({'line': event_id})
-        input_data = input_fn(request, 'application/json')
-        response = predict_fn(input_data, model_info)
+
+    test_abnormal_list = []
+    with open('test_abnormal', 'r') as f:
+        for line in f.readlines():
+            line = list(map(lambda n: n - 1, map(int, line.strip().split())))
+            print(f'line: {line}')
+            request = json.dumps({'line': line})
+            input_data = input_fn(request, 'application/json')
+            response = predict_fn(input_data, model_info)
+            test_abnormal_list.append(response)

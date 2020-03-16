@@ -32,13 +32,15 @@ if __name__ == '__main__':
     input_dir = './OpenStack/'
     output_dir = './openstack_result/'
     log_format = '<Logrecord> <Date> <Time> <Pid> <Level> <Component> \[<ADDR>\] <Content>'
+    log_main = 'open_stack'
     tau = 0.5
 
     parser = spell.LogParser(
         indir=input_dir,
         outdir=output_dir,
         log_format=log_format,
-        tau=tau
+        logmain=log_main,
+        tau=tau,
     )
 
     if not os.path.exists(output_dir):

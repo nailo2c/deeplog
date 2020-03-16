@@ -1,0 +1,6 @@
+The following VM instances have injected anomalies as observed in openstack_abnormal.log.
+
+544fd51c-4edc-4780-baae-ba1d80a0acfc
+ae651dff-c7ad-43d6-ac96-bbcd820ccca8
+a445709b-6ad0-40ec-8860-bec60b6ca0c2
+1643649d-2f42-4303-bfcd-7798baec19f9

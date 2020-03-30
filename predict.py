@@ -73,18 +73,18 @@ if __name__ == '__main__':
         else:
             TN += 1
 
-    print(f'thres: {thres}')
-    print(f'TP: {TP}')
-    print(f'FP: {FP}')
-    print(f'FP: {TN}')
-    print(f'FP: {FN}')
+    logging.info(f'thres: {thres}')
+    logging.info(f'TP: {TP}')
+    logging.info(f'FP: {FP}')
+    logging.info(f'FP: {TN}')
+    logging.info(f'FP: {FN}')
 
     accuracy = accu / len(predict)
     precision = TP / (TP + FP)
     recall = TP / (TP + FN)
     F1 = 2 * precision * recall / (precision + recall)
 
-    print(f'accuracy: {accuracy}')
-    print(f'Precision: {precision}')
-    print(f'Recall: {recall}')
-    print(f'F1: {F1}')
+    logging.info(f'accuracy: {accuracy}')
+    logging.info(f'Precision: {precision}')
+    logging.info(f'Recall: {recall}')
+    logging.info(f'F1: {F1}')

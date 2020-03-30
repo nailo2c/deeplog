@@ -13,4 +13,5 @@ test_abnormal
 .DS_Store
 
 .ipynb_checkpoints/
+*.ipynb
 *.pyc

@@ -4,10 +4,10 @@ PyTorch implements "DeepLog: Anomaly Detection and Diagnosis from System Logs th
 
 ## Preprocessing
 
-First, install the auto-parser from same author of DeepLog.
+First, install PyTorch, boto3 and the auto-parser from same author of DeepLog.
 
 ```bash
-pip install spellpy
+pip install -r requirements.txt
 ```
 
 Then we use open data from logpai's loghub
@@ -19,7 +19,7 @@ python preprocess.py
 ## Train
 
 ```python
-python train.py --num-class 1143 --num-candidates 114 --epochs 35 --window-size 3
+python train.py --num-class 1143 --num-candidates 114 --epochs 35 --window-size 3 --local True
 ```
 
 ## Predict

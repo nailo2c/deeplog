@@ -29,7 +29,7 @@ if __name__ == '__main__':
     ##########
     # Parser #
     ##########
-    input_dir = './OpenStack/'
+    input_dir = './data/OpenStack/'
     output_dir = './openstack_result/'
     log_format = '<Logrecord> <Date> <Time> <Pid> <Level> <Component> \[<ADDR>\] <Content>'
     log_main = 'open_stack'
@@ -63,10 +63,20 @@ if __name__ == '__main__':
 
     print(f'event_id_map: {len(event_id_map)}')
 
+    #########
+    # Train #
+    #########
     deeplog_train = deeplog_df_transfer(df, event_id_map)
     deeplog_file_generator('train', deeplog_train)
 
+    ###############
+    # Test Normal #
+    ###############
     deeplog_test_normal = deeplog_df_transfer(df_normal, event_id_map)
     deeplog_file_generator('test_normal', deeplog_test_normal)
+
+    #################
+    # Test Abnormal #
+    #################
     deeplog_test_abnormal = deeplog_df_transfer(df_abnormal, event_id_map)
     deeplog_file_generator('test_abnormal', deeplog_test_abnormal)

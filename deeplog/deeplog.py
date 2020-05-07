@@ -42,7 +42,7 @@ class Generate():
         inputs = []
         outputs = []
 
-        line = self.initline(local, name)
+        line = self.init_line(local, name)
         while line:
             line = tuple(map(lambda n: n - 1, map(int, line.strip().split())))
             for i in range(len(line) - window_size):
@@ -55,7 +55,7 @@ class Generate():
         dataset = TensorDataset(torch.tensor(inputs, dtype=torch.float), torch.tensor(outputs))
         return dataset
 
-    def initline(self, local, name):
+    def init_line(self, local, name):
         if local:
             f = open(name, 'r')
             self.init_obj = f
@@ -81,7 +81,7 @@ class Generate():
 def _get_train_data_loader(batch_size, is_distributed, window_size, local, **kwargs):
     logger.info("Get train data loader")
     _generate = Generate()
-    seq_dataset = _generate.generate(name='train', window_size=window_size, local=True)
+    seq_dataset = _generate.generate(name='train', window_size=window_size, local=local)
     train_sampler = torch.utils.data.distributed.DistributedSampler(seq_dataset) if is_distributed else None
     dataloader = DataLoader(seq_dataset, batch_size=batch_size, shuffle=train_sampler is None,
                             sampler=train_sampler, **kwargs)

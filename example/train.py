@@ -2,6 +2,7 @@ import os
 import sys
 import logging
 import argparse
+sys.path.append('../')
 from deeplog.deeplog import train
 
 logging.basicConfig(level=logging.DEBUG,

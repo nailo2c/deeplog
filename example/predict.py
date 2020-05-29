@@ -1,6 +1,7 @@
 import sys
 import json
 import logging
+sys.path.append('../')
 from deeplog.deeplog import model_fn, input_fn, predict_fn
 
 

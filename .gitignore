@@ -5,13 +5,16 @@
 !.vscode/extensions.json
 *.code-workspace
 
-openstack_result/
-model/
+# Local
+*.pyc
+.DS_Store
+*checkpoint*
+
+# output artifact
+example/model/*
+example/openstack_result/*
 train
 test_normal
 test_abnormal
-.DS_Store
-
-.ipynb_checkpoints/
-*.ipynb
-*.pyc
+*.pkl
+*.pth

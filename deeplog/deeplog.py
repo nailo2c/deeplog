@@ -17,6 +17,11 @@ logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler(sys.stdout))
 
 
+# Load logs from aws s3 bucket
+BUCKET = '$YOUR_S3_BUCKET'
+PREFIX = '$YOUR_S3_FOLDER_NAME'
+
+
 class Model(nn.Module):
     def __init__(self, input_size, hidden_size, num_layers, num_classes):
         super(Model, self).__init__()
@@ -62,8 +67,8 @@ class Generate():
             line = self.init_obj.readline()
         else:
             client = boto3.client('s3')
-            bucket = '$YOUR_S3_BUCKET'
-            prefix = '$YOUR_S3_FOLDER_NAME'
+            bucket = BUCKET
+            prefix = PREFIX
             self.init_obj = client.get_object(Bucket=bucket, Key=prefix + name)
             line = self.init_obj.get('Body')._raw_stream.readline()
             line = line.decode().rstrip()  # decode from byte to string & right strip \n

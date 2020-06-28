@@ -10,6 +10,8 @@ logging.basicConfig(level=logging.WARNING,
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler(sys.stdout))
 
+THRES = 23
+
 if __name__ == '__main__':
     ##############
     # Load Model #
@@ -41,7 +43,7 @@ if __name__ == '__main__':
     ##############
     # Evaluation #
     ##############
-    thres = 22
+    thres = THRES
     abnormal_has_anomaly = [1 if t['anomaly_cnt'] > thres else 0 for t in test_abnormal_list]
     abnormal_cnt_anomaly = [t['anomaly_cnt'] for t in test_abnormal_list]
     abnormal_predict = []
@@ -74,18 +76,18 @@ if __name__ == '__main__':
         else:
             TN += 1
 
-    logging.info(f'thres: {thres}')
-    logging.info(f'TP: {TP}')
-    logging.info(f'FP: {FP}')
-    logging.info(f'FP: {TN}')
-    logging.info(f'FP: {FN}')
+    logger.info(f'thres: {thres}')
+    logger.info(f'TP: {TP}')
+    logger.info(f'FP: {FP}')
+    logger.info(f'FP: {TN}')
+    logger.info(f'FP: {FN}')
 
     accuracy = accu / len(predict)
     precision = TP / (TP + FP)
     recall = TP / (TP + FN)
     F1 = 2 * precision * recall / (precision + recall)
 
-    logging.info(f'accuracy: {accuracy}')
-    logging.info(f'Precision: {precision}')
-    logging.info(f'Recall: {recall}')
-    logging.info(f'F1: {F1}')
+    logger.info(f'accuracy: {accuracy}')
+    logger.info(f'Precision: {precision}')
+    logger.info(f'Recall: {recall}')
+    logger.info(f'F1: {F1}')

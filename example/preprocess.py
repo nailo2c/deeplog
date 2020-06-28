@@ -1,15 +1,20 @@
 import os
+import logging
 import pandas as pd
 from glob import glob
 from spellpy import spell
 
+logging.basicConfig(level=logging.WARNING,
+                    format='[%(asctime)s][%(levelname)s]: %(message)s')
+logger = logging.getLogger(__name__)
+logger.addHandler(logging.StreamHandler(sys.stdout))
 
-def deeplog_df_transfer(df: pd.DataFrame, event_id_map: dict) -> pd.DataFrame:
+
+def deeplog_df_transfer(df, event_id_map):
     df['datetime'] = pd.to_datetime(df['Date'] + ' ' + df['Time'])
     df = df[['datetime', 'EventId']]
     df['EventId'] = df['EventId'].apply(lambda e: event_id_map[e] if event_id_map.get(e) else -1)
     deeplog_df = df.set_index('datetime').resample('1min').apply(_custom_resampler).reset_index()
-    # deeplog_df['EventId'] = deeplog_df['EventId'].apply(lambda x: list(filter(lambda e: e != -1, x)))
     return deeplog_df
 
 
@@ -61,7 +66,7 @@ if __name__ == '__main__':
     for i, event_id in enumerate(df['EventId'].unique(), 1):
         event_id_map[event_id] = i
 
-    print(f'event_id_map: {len(event_id_map)}')
+    logger.info(f'length of event_id_map: {len(event_id_map)}')
 
     #########
     # Train #

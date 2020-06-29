@@ -2,6 +2,7 @@ import sys
 sys.path.append('../')
 import json
 import logging
+import argparse
 from deeplog.deeplog import model_fn, input_fn, predict_fn
 
 
@@ -10,9 +11,13 @@ logging.basicConfig(level=logging.WARNING,
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler(sys.stdout))
 
-THRES = 23
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--threshold', type=int, default=23, metavar='N',
+                        help='to determine the time series data is an anomaly or not.')
+    args = parser.parse_args()
+
     ##############
     # Load Model #
     ##############
@@ -43,7 +48,7 @@ if __name__ == '__main__':
     ##############
     # Evaluation #
     ##############
-    thres = THRES
+    thres = args.threshold
     abnormal_has_anomaly = [1 if t['anomaly_cnt'] > thres else 0 for t in test_abnormal_list]
     abnormal_cnt_anomaly = [t['anomaly_cnt'] for t in test_abnormal_list]
     abnormal_predict = []

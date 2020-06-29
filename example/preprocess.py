@@ -2,7 +2,6 @@ import os
 import sys
 import logging
 import pandas as pd
-from glob import glob
 from spellpy import spell
 
 logging.basicConfig(level=logging.WARNING,
@@ -52,8 +51,7 @@ if __name__ == '__main__':
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    for log_name in glob(input_dir + '*.log'):
-        log_name = os.path.basename(log_name)
+    for log_name in ['openstack_abnormal.log', 'openstack_normal2.log', 'openstack_normal1.log']:
         parser.parse(log_name)
 
     ##################

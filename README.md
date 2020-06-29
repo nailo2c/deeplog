@@ -37,16 +37,16 @@ PyTorch implements "DeepLog: Anomaly Detection and Diagnosis from System Logs th
    2.3. Predict
 
    ```python
-   python3 predict.py
+   python3 predict.py --threshold 25
    ```
 
 3. Result
 
-   | Accuracy  | 0.94589 |
-   |-----------|---------|
-   | Precision | 0.86206 |
-   | Recall    | 0.54347 |
-   | F1        | 0.66667 |
+   | Accuracy  | 0.9430014 |
+   |-----------|-----------|
+   | Precision | 0.6497461 |
+   | Recall    | 0.9275362 |
+   | F1        | 0.7641791 |
 
 4. Deactivate
 

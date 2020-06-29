@@ -79,13 +79,16 @@ if __name__ == '__main__':
     logger.info(f'thres: {thres}')
     logger.info(f'TP: {TP}')
     logger.info(f'FP: {FP}')
-    logger.info(f'FP: {TN}')
-    logger.info(f'FP: {FN}')
+    logger.info(f'TN: {TN}')
+    logger.info(f'FN: {FN}')
 
     accuracy = accu / len(predict)
     precision = TP / (TP + FP)
     recall = TP / (TP + FN)
-    F1 = 2 * precision * recall / (precision + recall)
+    if int(precision) == 0 & int(recall) == 0:
+        F1 = 0
+    else:
+        F1 = 2 * precision * recall / (precision + recall)
 
     logger.info(f'accuracy: {accuracy}')
     logger.info(f'Precision: {precision}')

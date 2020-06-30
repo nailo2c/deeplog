@@ -3,6 +3,8 @@ import sys
 import logging
 import argparse
 sys.path.append('../')
+import torch
+torch.manual_seed(0)
 from deeplog.deeplog import train
 
 logging.basicConfig(level=logging.DEBUG,

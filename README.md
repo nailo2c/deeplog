@@ -1,6 +1,10 @@
-# deeplog
+# DeepLog
 
 PyTorch implements "DeepLog: Anomaly Detection and Diagnosis from System Logs through Deep Learning"
+
+## Play on Colab
+
+[https://colab.research.google.com/drive/1xWHovxTkysiPei68bTywqB2oCo6JelAU?usp=sharing](https://colab.research.google.com/drive/1xWHovxTkysiPei68bTywqB2oCo6JelAU?usp=sharing)
 
 ## Getting Started
 

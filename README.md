@@ -11,11 +11,10 @@ PyTorch implements "DeepLog: Anomaly Detection and Diagnosis from System Logs th
 1. Build environment
 
    ```sh
-   python3 -m venv deeplog-venv
-   cd deeplog-venv
-   source bin/activate
    git clone https://github.com/nailo2c/deeplog.git
    cd deeplog
+   python3 -m venv venv
+   . venv/bin/activate
    pip install -r requirements.txt
    ```
 

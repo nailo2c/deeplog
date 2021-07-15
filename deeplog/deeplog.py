@@ -31,8 +31,8 @@ class Model(nn.Module):
         self.fc = nn.Linear(hidden_size, num_classes)
 
     def forward(self, input):
-        h0 = torch.zeros(self.num_layers, input.size(0), self.hidden_size)
-        c0 = torch.zeros(self.num_layers, input.size(0), self.hidden_size)
+        h0 = torch.zeros(self.num_layers, input.size(0), self.hidden_size).to(input.device)
+        c0 = torch.zeros(self.num_layers, input.size(0), self.hidden_size).to(input.device)
         out, _ = self.lstm(input, (h0, c0))
         out = self.fc(out[:, -1, :])
         return out
@@ -104,8 +104,11 @@ def _average_gradients(model):
 def train(args):
     is_distributed = len(args.hosts) > 1 and args.backend is not None
     logger.debug("Distributed training - {}".format(is_distributed))
+    if args.num_gpus > 0 and not torch.cuda.is_available():
+        logger.warning("No CUDA available, setting num_gpus to 0 (num_gpus = {}).".format(args.num_gpus))
+        args.num_gpus = 0
     use_cuda = args.num_gpus > 0
-    logger.debug("Number of gpus available - {}".format(args.num_gpus))
+    logger.debug("Number of gpus requested - {}, available - {}.".format(args.num_gpus, torch.cuda.device_count()))
     kwargs = {'num_workers': 1, 'pin_memory': True} if use_cuda else {}
     device = torch.device("cuda" if use_cuda else "cpu")
 
@@ -133,12 +136,13 @@ def train(args):
     ))
 
     model = Model(args.input_size, args.hidden_size, args.num_layers, args.num_classes).to(device)
-    if is_distributed and use_cuda:
-        logger.info('multi-machine multi-gpu case')
-        model = torch.nn.parallel.DistributedDataParallel(model)
-    else:
-        logger.info('single-machine multi-gpu case or single-machine or multi-machine cpu case')
-        model = torch.nn.DataParallel(model)
+    if is_distributed:
+        if use_cuda:
+            logger.info('multi-machine multi-gpu case')
+            model = torch.nn.parallel.DistributedDataParallel(model)
+        else:
+            logger.info('single-machine multi-gpu case or single-machine or multi-machine cpu case')
+            model = torch.nn.DataParallel(model)
 
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters())
@@ -190,10 +194,10 @@ def model_fn(model_dir):
     logger.debug('model_info: {}'.format(model_info))
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     logger.info('Current device: {}'.format(device))
-    model = torch.nn.DataParallel(Model(input_size=model_info['input_size'],
-                                        hidden_size=model_info['hidden_size'],
-                                        num_layers=model_info['num_layers'],
-                                        num_classes=model_info['num_classes']))
+    model = Model(input_size=model_info['input_size'],
+                  hidden_size=model_info['hidden_size'],
+                  num_layers=model_info['num_layers'],
+                  num_classes=model_info['num_classes'])
     with open(os.path.join(model_dir, 'model.pth'), 'rb') as f:
         model.load_state_dict(torch.load(f))
     input_size = model_info['input_size']

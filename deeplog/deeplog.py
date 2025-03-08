@@ -55,7 +55,8 @@ class Generate():
                 outputs.append(line[i+window_size])
             line = self.readline(local)
             num_sessions += 1
-        logger.info('Number of session({}): {}'.format(name, len(inputs)))
+        # logger.info('Number of session({}): {}'.format(name, len(inputs)))
+        logger.info('Number of session({}): {}'.format(name, num_sessions))
         logger.info('Number of seqs({}): {}'.format(name, len(inputs)))
         dataset = TensorDataset(torch.tensor(inputs, dtype=torch.float), torch.tensor(outputs))
         return dataset

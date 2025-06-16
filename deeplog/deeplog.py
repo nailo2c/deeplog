@@ -58,7 +58,10 @@ class Generate():
         # logger.info('Number of session({}): {}'.format(name, len(inputs)))
         logger.info('Number of session({}): {}'.format(name, num_sessions))
         logger.info('Number of seqs({}): {}'.format(name, len(inputs)))
-        dataset = TensorDataset(torch.tensor(inputs, dtype=torch.float), torch.tensor(outputs))
+        dataset = TensorDataset(
+            torch.tensor(inputs, dtype=torch.float),
+            torch.tensor(outputs, dtype=torch.long),
+        )
         return dataset
 
     def init_line(self, local, name):
@@ -241,8 +244,12 @@ def predict_fn(input_data, model_info):
     for i in range(len(line) - window_size):
         seq = line[i:i + window_size]
         label = line[i + window_size]
-        seq = torch.tensor(seq, dtype=torch.float).view(-1, window_size, input_size).to(device)
-        label = torch.tensor(label).view(-1).to(device)
+        seq = (
+            torch.tensor(seq, dtype=torch.float)
+            .view(-1, window_size, input_size)
+            .to(device)
+        )
+        label = torch.tensor(label, dtype=torch.long).view(-1).to(device)
         output = model(seq)
         predict = torch.argsort(output, 1)[0][-num_candidates:]
         if label not in predict:

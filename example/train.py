@@ -2,9 +2,10 @@ import os
 import sys
 import logging
 import argparse
-sys.path.append('../')
-import torch
-torch.manual_seed(0)
+
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, PROJECT_ROOT)
+
 from deeplog.deeplog import train
 
 logging.basicConfig(level=logging.DEBUG,
@@ -49,8 +50,8 @@ if __name__ == '__main__':
                         help='number of gpu to train')
 
     # Local mode
-    parser.add_argument('--local', type=bool, default=False,
-                        help='local training model.')
+    parser.add_argument('--local', action='store_true',
+                        help='use local training files instead of S3.')
 
     if not os.path.isdir('./model/'):
         os.mkdir('./model/')

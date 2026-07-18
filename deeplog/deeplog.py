@@ -3,8 +3,9 @@ import sys
 import json
 import logging
 import argparse
+import random
 
-import boto3
+import numpy as np
 import torch
 import torch.distributed as dist
 import torch.nn as nn
@@ -36,6 +37,14 @@ class Model(nn.Module):
         out, _ = self.lstm(input, (h0, c0))
         out = self.fc(out[:, -1, :])
         return out
+
+
+def set_seed(seed):
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
 
 
 class Generate():
@@ -70,6 +79,7 @@ class Generate():
             self.init_obj = f
             line = self.init_obj.readline()
         else:
+            import boto3
             client = boto3.client('s3')
             bucket = BUCKET
             prefix = PREFIX
@@ -127,10 +137,9 @@ def train(args):
             dist.get_rank(), args.num_gpus))
 
     # set the seed for generating random numbers
-    torch.manual_seed(args.seed)
+    set_seed(args.seed)
     if use_cuda:
         logger.info('Use CUDA')
-        torch.cuda.manual_seed(args.seed)
 
     train_loader = _get_train_data_loader(args.batch_size, is_distributed, args.window_size, args.local, **kwargs)
 
@@ -300,7 +309,7 @@ if __name__ == '__main__':
     parser.add_argument('--num-gpus', type=int, default=os.environ['SM_NUM_GPUS'])
 
     # Local mode
-    parser.add_argument('--local', type=bool, default=False,
-                        help='local training model.')
+    parser.add_argument('--local', action='store_true',
+                        help='use local training files instead of S3.')
 
     train(parser.parse_args())
